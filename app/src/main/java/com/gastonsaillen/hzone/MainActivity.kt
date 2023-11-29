@@ -9,8 +9,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.gastonsaillen.hzone.ui.theme.HZoneTheme
+
+
+val testList = listOf<Zone>(
+    Zone(color = Color.Red, text = "Zone 1", zoneEnabled = true),
+    Zone(color = Color.Blue, text = "Zone 2", zoneEnabled = false),
+    Zone(color = Color.Yellow, text = "Zone 3", zoneEnabled = false)
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +30,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HZone()
+
+                    val testList = listOf<Zone>(
+                        Zone(color = Color.Red, text = "Zone 1", zoneEnabled = true),
+                        Zone(color = Color.Blue, text = "Zone 2", zoneEnabled = false),
+                        Zone(color = Color.Yellow, text = "Zone 3", zoneEnabled = false)
+                    )
+                    HZone(zoneList = testList, onZoneClick = {})
                 }
             }
         }

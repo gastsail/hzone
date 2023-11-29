@@ -1,6 +1,8 @@
 package com.gastonsaillen.hzone
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,20 +29,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
-val testList = listOf<Zone>(
-    Zone(color = Color.Red, text = "Zone 1", zoneEnabled = false),
-    Zone(color = Color.Blue, text = "Zone 2", zoneEnabled = true),
-    Zone(color = Color.Yellow, text = "Zone 3", zoneEnabled = false)
-)
-
 @Composable
-fun HZone() {
-    var testListM by remember { mutableStateOf(testList) }
+fun HZone(zoneList : List<Zone>, onZoneClick: (Zone) -> Unit) {
+    var testListM by remember { mutableStateOf(zoneList) }
 
     LaunchedEffect(null) {
         delay(2000)
         testListM = testListM.mapIndexed { index, zone ->
-            if (index == 0) {
+            if (index == 1) {
                 zone.copy(zoneEnabled = true, text = "Zone 2")
             } else {
                 zone.copy(zoneEnabled = false)
@@ -57,23 +52,25 @@ fun HZone() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         items(testListM) {
-            ZoneItem(zone = it)
+            ZoneItem(zone = it, onZoneClick)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ZoneItem(zone: Zone) {
+private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
+    val transition = updateTransition(targetState = zone.zoneEnabled, label = "zoneTransition")
+    val size by transition.animateDp(label = "size") { enabled ->
+        if (enabled) 30.dp else 30.dp
+    }
+
     Card(
         modifier = Modifier
             .animateContentSize()
-            .wrapContentSize()
             .then(
-                if (zone.zoneEnabled) Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp) // Add padding to Text when zone is enabled
-                else Modifier.size(30.dp)
+                if (zone.zoneEnabled) Modifier.wrapContentSize()
+                else Modifier.size(size)
             ),
         shape = RoundedCornerShape(30),
         colors = CardDefaults.cardColors(
@@ -81,7 +78,7 @@ private fun ZoneItem(zone: Zone) {
             disabledContainerColor = zone.color.copy(alpha = .6f)
         ),
         enabled = zone.zoneEnabled,
-        onClick = { },
+        onClick = { onZoneClick.invoke(zone) },
     ) {
         if (zone.zoneEnabled) {
             Text(
@@ -93,6 +90,7 @@ private fun ZoneItem(zone: Zone) {
     }
 }
 
+
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun ZoneItemPreview() {
@@ -100,9 +98,9 @@ fun ZoneItemPreview() {
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ZoneItem(zone = Zone(color = Color.Red, text = "Zone 3", zoneEnabled = false))
-        ZoneItem(zone = Zone(color = Color.Blue, text = "Zone 3", zoneEnabled = true))
-        ZoneItem(zone = Zone(color = Color.Green, text = "Zone 3", zoneEnabled = false))
+        ZoneItem(zone = Zone(color = Color.Red, text = "Zone 3", zoneEnabled = false), {})
+        ZoneItem(zone = Zone(color = Color.Blue, text = "Zone 3", zoneEnabled = true), {})
+        ZoneItem(zone = Zone(color = Color.Green, text = "Zone 3", zoneEnabled = false), {})
     }
 }
 
