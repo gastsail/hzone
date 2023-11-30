@@ -5,8 +5,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -16,19 +18,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import androidx.compose.ui.unit.sp
 
 val hZones = listOf<Zone>(
     Zone(color = Color.Blue, text = "ZONE 1", zoneEnabled = false, zoneType = ZoneType.ZONE_1),
@@ -84,30 +85,52 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
         if (enabled) 30.dp else 30.dp
     }
 
-    Card(
-        modifier = Modifier
-            .animateContentSize()
-            .then(
-                if (zone.zoneEnabled) Modifier.wrapContentSize()
-                else Modifier.size(size)
+    Box {
+        Card(
+            modifier = Modifier
+                .animateContentSize()
+                .then(
+                    if (zone.zoneEnabled) Modifier.wrapContentSize()
+                    else Modifier.size(size)
+                ),
+            shape = RoundedCornerShape(30),
+            colors = CardDefaults.cardColors(
+                containerColor = zone.color,
+                disabledContainerColor = zone.color.copy(alpha = .6f)
             ),
-        shape = RoundedCornerShape(30),
-        colors = CardDefaults.cardColors(
-            containerColor = zone.color,
-            disabledContainerColor = zone.color.copy(alpha = .6f)
-        ),
-        enabled = zone.zoneEnabled,
-        onClick = { onZoneClick.invoke(zone) },
-    ) {
+            enabled = zone.zoneEnabled,
+            onClick = { onZoneClick.invoke(zone) },
+        ) {
+            if (zone.zoneEnabled) {
+                Text(
+                    modifier = Modifier.padding(
+                        top = 4.dp,
+                        bottom = 4.dp,
+                        start = 8.dp,
+                        end = 8.dp
+                    ),
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
+                    text = zone.text,
+                    color = Color.Black
+                )
+            }
+        }
         if (zone.zoneEnabled) {
-            Text(
-                modifier = Modifier.padding(4.dp),
-                text = zone.text,
-                color = Color.Black
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier
+                    .size(30.dp)
+                    .align(Alignment.BottomCenter)
+                    .offset(y = 8.dp)
+                    .padding(bottom = 4.dp) // Adjust the padding as needed
             )
         }
     }
 }
+
 
 /**
  * Calculates the updated average BPM using a moving average formula.
