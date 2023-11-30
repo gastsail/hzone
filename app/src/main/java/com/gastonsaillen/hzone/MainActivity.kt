@@ -30,18 +30,53 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    var averageBpm by remember { mutableStateOf(0) }
 
-                    var bpmV by remember { mutableStateOf(0) }
+
                     LaunchedEffect(null) {
-                        val bpmValues =
-                            listOf(80, 100, 120, 140, 160, 172, 160)
+                        val bpmValues = listOf(
+                            0,
+                            60,
+                            140,
+                            150,
+                            160,
+                            170,
+                            160,
+                            180,
+                            180,
+                            195,
+                            180,
+                            180,
+                            195,
+                            180,
+                            180,
+                            195,
+                            180,
+                            180,
+                            195,
+                            180,
+                            180,
+                            195,
+                            150,
+                            155,
+                            145,
+                            148,
+                            149,
+                            120,
+                            110,
+                            100,
+                            110,
+                            100,
+                            110,
+                            100
+                        )
                         for (bpm in bpmValues) {
-                            delay(2000)
-                            bpmV = bpm
+                            averageBpm = calculateAverageBpm(bpm, averageBpm)
+                            delay(1000)
                         }
-
                     }
-                    HZone(bpm = bpmV, onZoneClick = {})
+
+                    HZone(averageBpm = averageBpm, onZoneClick = {})
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.gastonsaillen.hzone
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
@@ -37,13 +38,19 @@ val hZones = listOf<Zone>(
     Zone(color = Color.Red, text = "ZONE 5", zoneEnabled = false, zoneType = ZoneType.ZONE_5)
 )
 
+/**
+ * Composable function that displays a row of zones based on the average BPM value.
+ *
+ * @param averageBpm The average BPM value to determine the enabled zone.
+ * @param onZoneClick Callback function for zone click events.
+ */
 @Composable
-fun HZone(bpm: Int, onZoneClick: (Zone) -> Unit) {
-
-    val calculatedZoneType = calculateZone(bpm)
+fun HZone(averageBpm: Int, onZoneClick: (Zone) -> Unit) {
+    Log.d("AvgBPM", "Avg: $averageBpm")
+    val calculatedZoneType = calculateZone(averageBpm)
 
     val modifiedZones = hZones.mapIndexed { index, zone ->
-        if (zone.zoneType == calculatedZoneType.zoneType) {
+        if (zone.zoneType == calculatedZoneType) {
             zone.copy(zoneEnabled = true)
         } else {
             zone.copy(zoneEnabled = false)
@@ -63,6 +70,12 @@ fun HZone(bpm: Int, onZoneClick: (Zone) -> Unit) {
     }
 }
 
+/**
+ * Composable function that represents an individual zone item.
+ *
+ * @param zone The zone to display.
+ * @param onZoneClick Callback function for zone click events.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
@@ -96,18 +109,39 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
     }
 }
 
-private fun calculateZone(bpm: Int): Zone {
+/**
+ * Calculates the updated average BPM using a moving average formula.
+ *
+ * @param newBpm The new BPM value.
+ * @param currentAverage The current average BPM.
+ * @return The updated average BPM.
+ */
+fun calculateAverageBpm(newBpm: Int, currentAverage: Int): Int {
+    val weight = 0.2
+    return ((1 - weight) * currentAverage + weight * newBpm).toInt()
+}
+
+/**
+ * Calculates the zone type based on the average BPM value.
+ *
+ * @param averageBpm The average BPM value.
+ * @return The corresponding zone type.
+ */
+private fun calculateZone(averageBpm: Int): ZoneType {
     return when {
-        bpm in 95..114 -> hZones[0].copy(zoneEnabled = true)
-        bpm in 115..133 -> hZones[1].copy(zoneEnabled = true)
-        bpm in 134..152 -> hZones[2].copy(zoneEnabled = true)
-        bpm in 153..171 -> hZones[3].copy(zoneEnabled = true)
-        bpm >= 172 -> hZones[4].copy(zoneEnabled = true)
-        else -> hZones[0].copy(zoneEnabled = true) // Default to Zone 1
+        averageBpm in 95..114 -> ZoneType.ZONE_1
+        averageBpm in 115..133 -> ZoneType.ZONE_2
+        averageBpm in 134..152 -> ZoneType.ZONE_3
+        averageBpm in 153..171 -> ZoneType.ZONE_4
+        averageBpm >= 172 -> ZoneType.ZONE_5
+        else -> ZoneType.ZONE_1 // Default to Zone 1
     }
 }
 
 
+/**
+ * Composable function for previewing an individual zone item.
+ */
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun ZoneItemPreview() {
@@ -139,7 +173,14 @@ fun ZoneItemPreview() {
     }
 }
 
-
+/**
+ * Data class representing a zone with color, text, type, and enabled status.
+ *
+ * @property color The color of the zone.
+ * @property text The text to display for the zone.
+ * @property zoneType The type of the zone.
+ * @property zoneEnabled Whether the zone is enabled or not.
+ */
 data class Zone(
     val color: Color,
     val text: String,
@@ -147,6 +188,9 @@ data class Zone(
     val zoneEnabled: Boolean
 )
 
+/**
+ * Enumeration representing different zone types.
+ */
 enum class ZoneType {
     ZONE_1, ZONE_2, ZONE_3, ZONE_4, ZONE_5
 }
