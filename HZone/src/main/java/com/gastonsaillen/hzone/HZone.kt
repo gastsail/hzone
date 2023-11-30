@@ -29,18 +29,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
-@Composable
-fun HZone(zoneList : List<Zone>, onZoneClick: (Zone) -> Unit) {
-    var testListM by remember { mutableStateOf(zoneList) }
+val hZones = listOf<Zone>(
+    Zone(color = Color.Blue, text = "ZONE 1", zoneEnabled = false, zoneType = ZoneType.ZONE_1),
+    Zone(color = Color.Green, text = "ZONE 2", zoneEnabled = false, zoneType = ZoneType.ZONE_2),
+    Zone(color = Color.Yellow, text = "ZONE 3", zoneEnabled = false, zoneType = ZoneType.ZONE_3),
+    Zone(color = Color.Cyan, text = "ZONE 4", zoneEnabled = false, zoneType = ZoneType.ZONE_4),
+    Zone(color = Color.Red, text = "ZONE 5", zoneEnabled = false, zoneType = ZoneType.ZONE_5)
+)
 
-    LaunchedEffect(null) {
-        delay(2000)
-        testListM = testListM.mapIndexed { index, zone ->
-            if (index == 1) {
-                zone.copy(zoneEnabled = true, text = "Zone 2")
-            } else {
-                zone.copy(zoneEnabled = false)
-            }
+@Composable
+fun HZone(bpm: Int, onZoneClick: (Zone) -> Unit) {
+
+    val calculatedZoneType = calculateZone(bpm)
+
+    val modifiedZones = hZones.mapIndexed { index, zone ->
+        if (zone.zoneType == calculatedZoneType.zoneType) {
+            zone.copy(zoneEnabled = true)
+        } else {
+            zone.copy(zoneEnabled = false)
         }
     }
 
@@ -51,7 +57,7 @@ fun HZone(zoneList : List<Zone>, onZoneClick: (Zone) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items(testListM) {
+        items(modifiedZones) {
             ZoneItem(zone = it, onZoneClick)
         }
     }
@@ -84,9 +90,20 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = zone.text,
-                color = Color.White
+                color = Color.Black
             )
         }
+    }
+}
+
+private fun calculateZone(bpm: Int): Zone {
+    return when {
+        bpm in 95..114 -> hZones[0].copy(zoneEnabled = true)
+        bpm in 115..133 -> hZones[1].copy(zoneEnabled = true)
+        bpm in 134..152 -> hZones[2].copy(zoneEnabled = true)
+        bpm in 153..171 -> hZones[3].copy(zoneEnabled = true)
+        bpm >= 172 -> hZones[4].copy(zoneEnabled = true)
+        else -> hZones[0].copy(zoneEnabled = true) // Default to Zone 1
     }
 }
 
@@ -98,9 +115,27 @@ fun ZoneItemPreview() {
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ZoneItem(zone = Zone(color = Color.Red, text = "Zone 3", zoneEnabled = false), {})
-        ZoneItem(zone = Zone(color = Color.Blue, text = "Zone 3", zoneEnabled = true), {})
-        ZoneItem(zone = Zone(color = Color.Green, text = "Zone 3", zoneEnabled = false), {})
+        ZoneItem(
+            zone = Zone(
+                color = Color.Red,
+                text = "Zone 1",
+                zoneEnabled = false,
+                zoneType = ZoneType.ZONE_1
+            ), {})
+        ZoneItem(
+            zone = Zone(
+                color = Color.Yellow,
+                text = "Zone 2",
+                zoneEnabled = false,
+                zoneType = ZoneType.ZONE_2
+            ), {})
+        ZoneItem(
+            zone = Zone(
+                color = Color.Blue,
+                text = "Zone 3",
+                zoneEnabled = true,
+                zoneType = ZoneType.ZONE_3
+            ), {})
     }
 }
 
@@ -108,5 +143,10 @@ fun ZoneItemPreview() {
 data class Zone(
     val color: Color,
     val text: String,
+    val zoneType: ZoneType,
     val zoneEnabled: Boolean
 )
+
+enum class ZoneType {
+    ZONE_1, ZONE_2, ZONE_3, ZONE_4, ZONE_5
+}
