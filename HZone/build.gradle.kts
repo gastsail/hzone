@@ -48,8 +48,8 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "com.gastonsaillen"
             artifactId = "hzone"
-            version = "0.9-alpha"
-            artifact("$buildDir/outputs/aar/HZone-release.aar")
+            version = "0.9-alpha04"
+            evaluationDependsOn(":HZone:bundleReleaseAar")
         }
     }
 }
