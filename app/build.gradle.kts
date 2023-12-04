@@ -66,6 +66,5 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    implementation(project(":HZone"))
+    implementation("com.gastonsaillen:hzone:0.9-alpha")
 }

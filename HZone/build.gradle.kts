@@ -1,10 +1,9 @@
-import java.util.Properties
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
 }
+
 android {
 
     namespace = "com.gastonsaillen.hzone"
@@ -43,38 +42,21 @@ android {
         kotlinCompilerExtensionVersion = "1.4.4"
     }
 }
-val githubProperties = Properties()
-githubProperties.load(rootProject.file("github.properties").inputStream())
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("release") {
             groupId = "com.gastonsaillen"
             artifactId = "hzone"
             version = "0.9-alpha"
             artifact("$buildDir/outputs/aar/HZone-release.aar")
         }
     }
-    repositories {
-        maven {
-            name = "GithubPackages"
-            url = uri("https://maven.pkg.github.com/gastsail/HZone")
-            credentials {
-                username = githubProperties.getProperty("gpr.usr") ?: System.getenv("GITHUB_USER")
-                password = githubProperties.getProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
 }
-
-
-
-
 
 dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation("com.gastonsaillen:hzone")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     testImplementation("junit:junit:4.13.2")
