@@ -30,7 +30,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
                 ) {
-                    var averageBpm by remember { mutableStateOf(0) }
+                    /*
+                      var averageBpm by remember { mutableStateOf(0) }
 
 
                     LaunchedEffect(null) {
@@ -77,6 +78,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     HZone(averageBpm = averageBpm, onZoneClick = {})
+                     */
+
                 }
             }
         }
