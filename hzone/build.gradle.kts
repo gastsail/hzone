@@ -50,7 +50,7 @@ project.afterEvaluate {
             register<MavenPublication>("release") {
                 groupId = "com.github.gastsail"
                 artifactId = "hzone"
-                version = "0.9-alpha12"
+                version = "0.9-alpha13"
             }
             repositories {
                 mavenLocal()
