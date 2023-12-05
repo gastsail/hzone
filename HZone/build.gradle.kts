@@ -43,26 +43,24 @@ android {
     }
 }
 
-tasks.named("release") {
-    mustRunAfter(tasks.named(":HZone:bundleReleaseAar"))
-}
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "com.gastonsaillen"
-            artifactId = "hzone"
-            version = "0.9-alpha06"
-            artifact("$buildDir/outputs/aar/HZone-release.aar")
-        }
-        repositories {
-            mavenLocal()
+project.afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("release") {
+                groupId = "com.gastonsaillen"
+                artifactId = "hzone"
+                version = "0.9-alpha06"
+                artifact(tasks.getByName("bundleReleaseAar").outputs.files.singleFile)
+            }
+            repositories {
+                mavenLocal()
+            }
         }
     }
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
