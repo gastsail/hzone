@@ -48,9 +48,9 @@ project.afterEvaluate {
     publishing {
         publications {
             register<MavenPublication>("release") {
-                groupId = "com.gastonsaillen"
+                groupId = "com.github.gastsail"
                 artifactId = "hzone"
-                version = "0.9-alpha08"
+                version = "0.9-alpha09"
             }
             repositories {
                 mavenLocal()
