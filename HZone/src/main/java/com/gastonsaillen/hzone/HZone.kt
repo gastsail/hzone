@@ -50,7 +50,7 @@ fun HZone(averageBpm: Int, onZoneClick: (Zone) -> Unit) {
     Log.d("AvgBPM", "Avg: $averageBpm")
     val calculatedZoneType = calculateZone(averageBpm)
 
-    val modifiedZones = hZones.mapIndexed { index, zone ->
+    val modifiedZones = hZones.map { zone ->
         if (zone.zoneType == calculatedZoneType) {
             zone.copy(zoneEnabled = true)
         } else {

@@ -43,13 +43,20 @@ android {
     }
 }
 
+tasks.named("release") {
+    mustRunAfter(tasks.named(":HZone:bundleReleaseAar"))
+}
+
 publishing {
     publications {
-        create<MavenPublication>("release") {
+        register<MavenPublication>("release") {
             groupId = "com.gastonsaillen"
             artifactId = "hzone"
-            version = "0.9-alpha05"
+            version = "0.9-alpha06"
             artifact("$buildDir/outputs/aar/HZone-release.aar")
+        }
+        repositories {
+            mavenLocal()
         }
     }
 }
