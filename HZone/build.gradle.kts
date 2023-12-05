@@ -50,7 +50,7 @@ project.afterEvaluate {
             register<MavenPublication>("release") {
                 groupId = "com.gastonsaillen"
                 artifactId = "hzone"
-                version = "0.9-alpha07"
+                version = "0.9-alpha08"
             }
             repositories {
                 mavenLocal()
