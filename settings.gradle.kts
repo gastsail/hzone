@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "HZone"
 include(":app")
-include(":HZone")
+include(":hzone")
