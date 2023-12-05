@@ -50,7 +50,7 @@ project.afterEvaluate {
             register<MavenPublication>("release") {
                 groupId = "com.gastonsaillen"
                 artifactId = "hzone"
-                version = "0.9-alpha06"
+                version = "0.9-alpha07"
                 artifact(tasks.getByName("bundleReleaseAar").outputs.files.singleFile)
             }
             repositories {
