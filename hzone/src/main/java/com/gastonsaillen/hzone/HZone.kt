@@ -139,7 +139,7 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
  * @param currentAverage The current average BPM.
  * @return The updated average BPM.
  */
-fun calculateAverageBpm(newBpm: Int, currentAverage: Int): Int {
+fun calculateAverageBpm(newBpm: Int, currentAverage: Int = 0): Int {
     val weight = 0.2
     return ((1 - weight) * currentAverage + weight * newBpm).toInt()
 }
