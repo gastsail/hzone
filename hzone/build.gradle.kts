@@ -50,7 +50,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.gastsail"
                 artifactId = "hzone"
-                version = "1.0"
+                version = "1.0.1"
             }
             repositories {
                 mavenLocal()
