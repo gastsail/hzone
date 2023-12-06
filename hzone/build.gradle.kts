@@ -43,14 +43,14 @@ android {
     }
 }
 
-
-project.afterEvaluate {
+afterEvaluate {
     publishing {
         publications {
-            register<MavenPublication>("release") {
+            create<MavenPublication>("release") {
+                from(components["release"])
                 groupId = "com.github.gastsail"
                 artifactId = "hzone"
-                version = "0.9"
+                version = "0.9-alpha17"
             }
             repositories {
                 mavenLocal()
@@ -58,6 +58,7 @@ project.afterEvaluate {
         }
     }
 }
+
 
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
