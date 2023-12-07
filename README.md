@@ -79,9 +79,11 @@ HZone(averageBpm = averageBpm, onZoneClick = {
 The `averageBpm` parameter is used to calculate the average BPM from the values you provide using the `calculateAverageBpm` function.
 
 ```kotlin
-val bpmValues = listOf(80, 85, 90)
+val bpmValues = viewModel.bpmValues.collectAsStateWithLifecycle()
 val averageBpm = calculateAverageBpm(bpmValues)
 ```
+
+*Remember that the `bpmValues` should be a stream that comes from a data source, this can be modeled in a viewmodel that emits each bpm to the view and the view collect it as state.*
 
 Feel free to customize and integrate `HZone` into your project to visualize heart rate zones dynamically.
 
