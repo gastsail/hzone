@@ -1,13 +1,12 @@
 package com.gastonsaillen.hzone
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,15 +42,25 @@ internal val hZones = listOf<Zone>(
 /**
  * Composable function that displays a row of zones based on the average BPM value.
  *
+ * @param modifier The modifier for the HZone composable.
+ * @param contentAlignment The alignment of the HZone content.
  * @param averageBpm The average BPM value to determine the enabled zone.
  * @param onZoneClick Callback function for zone click events.
+ * @param customZones The custom list of Zone items provided by the user.
  */
 @Composable
-fun HZone(averageBpm: Int, onZoneClick: (Zone) -> Unit) {
-    Log.d("AvgBPM", "Avg: $averageBpm")
-    val calculatedZoneType = calculateZone(averageBpm)
+fun HZone(modifier: Modifier = Modifier,
+          customZones: List<Zone> = emptyList(),
+          contentAlignment: Alignment = Alignment.TopStart,
+          averageBpm: Int,
+          onZoneClick: (Zone) -> Unit) {
 
-    val modifiedZones = hZones.map { zone ->
+    val zonesToUse = customZones.ifEmpty {
+        hZones
+    }
+
+    val calculatedZoneType = calculateZone(averageBpm)
+    val modifiedZones = zonesToUse.map { zone ->
         if (zone.zoneType == calculatedZoneType) {
             zone.copy(zoneEnabled = true)
         } else {
@@ -58,15 +68,14 @@ fun HZone(averageBpm: Int, onZoneClick: (Zone) -> Unit) {
         }
     }
 
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        items(modifiedZones) {
-            ZoneItem(zone = it, onZoneClick)
+    Box(modifier = modifier, contentAlignment = contentAlignment) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items(modifiedZones) {
+                ZoneItem(zone = it, onZoneClick)
+            }
         }
     }
 }
@@ -125,7 +134,7 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
                     .size(30.dp)
                     .align(Alignment.BottomCenter)
                     .offset(y = 8.dp)
-                    .padding(bottom = 4.dp) // Adjust the padding as needed
+                    .padding(bottom = 4.dp)
             )
         }
     }
