@@ -50,9 +50,9 @@ internal val hZones = listOf<Zone>(
  */
 @Composable
 fun HZone(modifier: Modifier = Modifier,
+          averageBpm: Int,
           customZones: List<Zone> = emptyList(),
           contentAlignment: Alignment = Alignment.TopStart,
-          averageBpm: Int,
           onZoneClick: (Zone) -> Unit) {
 
     val zonesToUse = customZones.ifEmpty {
