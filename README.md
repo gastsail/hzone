@@ -87,6 +87,7 @@ The `averageBpm` parameter is used to calculate the average BPM from the values 
 val bpmValues = viewModel.bpmValues.collectAsStateWithLifecycle()
 val averageBpm = calculateAverageBpm(bpmValues)
 ```
+*Remember that the `bpmValues` should be a stream that comes from a data source, this can be modeled in a viewmodel that emits each bpm to the view and the view collect it as state.*
 
 `Colors` can be customized sending your own `Custom Zones`, take in mind that the max zones are 5 so you will be limited sending the list to the first 5 entries.
 
@@ -111,8 +112,6 @@ val customZones = listOf(
                         customZones = customZones,
                         onZoneClick = {})
 ```
-
-*Remember that the `bpmValues` should be a stream that comes from a data source, this can be modeled in a viewmodel that emits each bpm to the view and the view collect it as state.*
 
 Feel free to customize and integrate `HZone` into your project to visualize heart rate zones dynamically.
 
