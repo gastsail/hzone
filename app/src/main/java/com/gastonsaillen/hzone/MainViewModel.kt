@@ -2,6 +2,7 @@ package com.gastonsaillen.hzone
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gastonsaillen.hzone.utils.calculateAverageBpm
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

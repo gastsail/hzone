@@ -3,7 +3,6 @@ package com.gastonsaillen.hzone
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,21 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-internal val hZones = listOf<Zone>(
-    Zone(color = Color.Blue, text = "ZONE 1", zoneEnabled = false, zoneType = ZoneType.ZONE_1),
-    Zone(color = Color.Green, text = "ZONE 2", zoneEnabled = false, zoneType = ZoneType.ZONE_2),
-    Zone(color = Color.Yellow, text = "ZONE 3", zoneEnabled = false, zoneType = ZoneType.ZONE_3),
-    Zone(color = Color.Cyan, text = "ZONE 4", zoneEnabled = false, zoneType = ZoneType.ZONE_4),
-    Zone(color = Color.Red, text = "ZONE 5", zoneEnabled = false, zoneType = ZoneType.ZONE_5)
-)
+import com.gastonsaillen.hzone.data.ZoneType
+import com.gastonsaillen.hzone.data.hZones
+import com.gastonsaillen.hzone.utils.calculateZone
 
 /**
  * Composable function that displays a row of zones based on the average BPM value.
@@ -46,7 +39,7 @@ internal val hZones = listOf<Zone>(
  * @param contentAlignment The alignment of the HZone content.
  * @param averageBpm The average BPM value to determine the enabled zone.
  * @param onZoneClick Callback function for zone click events.
- * @param customZones The custom list of Zone items provided by the user.
+ * @param customZones The custom list of Zone items provided by the user (Max 5).
  */
 @Composable
 fun HZone(modifier: Modifier = Modifier,
@@ -55,7 +48,8 @@ fun HZone(modifier: Modifier = Modifier,
           contentAlignment: Alignment = Alignment.TopStart,
           onZoneClick: (Zone) -> Unit) {
 
-    val zonesToUse = customZones.ifEmpty {
+
+    val zonesToUse = customZones.take(5).ifEmpty {
         hZones
     }
 
@@ -140,37 +134,6 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
     }
 }
 
-
-/**
- * Calculates the updated average BPM using a moving average formula.
- *
- * @param newBpm The new BPM value.
- * @param currentAverage The current average BPM.
- * @return The updated average BPM.
- */
-fun calculateAverageBpm(newBpm: Int, currentAverage: Int = 0): Int {
-    val weight = 0.2
-    return ((1 - weight) * currentAverage + weight * newBpm).toInt()
-}
-
-/**
- * Calculates the zone type based on the average BPM value.
- *
- * @param averageBpm The average BPM value.
- * @return The corresponding zone type.
- */
-private fun calculateZone(averageBpm: Int): ZoneType {
-    return when {
-        averageBpm in 95..114 -> ZoneType.ZONE_1
-        averageBpm in 115..133 -> ZoneType.ZONE_2
-        averageBpm in 134..152 -> ZoneType.ZONE_3
-        averageBpm in 153..171 -> ZoneType.ZONE_4
-        averageBpm >= 172 -> ZoneType.ZONE_5
-        else -> ZoneType.ZONE_1 // Default to Zone 1
-    }
-}
-
-
 /**
  * Composable function for previewing an individual zone item.
  */
@@ -219,10 +182,3 @@ data class Zone(
     val zoneType: ZoneType,
     val zoneEnabled: Boolean
 )
-
-/**
- * Enumeration representing different zone types.
- */
-enum class ZoneType {
-    ZONE_1, ZONE_2, ZONE_3, ZONE_4, ZONE_5
-}
