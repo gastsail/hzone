@@ -105,25 +105,39 @@ private fun ZoneItem(zone: Zone, onZoneClick: (Zone) -> Unit) {
             onClick = { onZoneClick.invoke(zone) },
         ) {
             if (zone.zoneEnabled) {
-                Text(
-                    modifier = Modifier.padding(
-                        top = 4.dp,
-                        bottom = 4.dp,
-                        start = 8.dp,
-                        end = 8.dp
-                    ),
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    text = zone.text,
-                    color = Color.Black
-                )
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center) {
+                    if(zone.heartIconEnabled) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_heart_24),
+                            contentDescription = null,
+                            tint = zone.heartIconColor,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .padding(start = 4.dp)
+                        )
+                    }
+
+                    Text(
+                        modifier = Modifier.padding(
+                            top = 4.dp,
+                            bottom = 4.dp,
+                            start = 8.dp,
+                            end = 8.dp
+                        ),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp,
+                        text = zone.text,
+                        color = zone.textColor
+                    )
+                }
             }
         }
         if (zone.zoneEnabled) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
                 contentDescription = null,
-                tint = Color.White,
+                tint = zone.selectorIconColor,
                 modifier = Modifier
                     .size(30.dp)
                     .align(Alignment.BottomCenter)
@@ -180,5 +194,9 @@ data class Zone(
     val color: Color,
     val text: String,
     val zoneType: ZoneType,
-    val zoneEnabled: Boolean
+    val zoneEnabled: Boolean,
+    val textColor: Color = Color.Black,
+    val selectorIconColor: Color = Color.White,
+    val heartIconEnabled: Boolean = true,
+    val heartIconColor: Color = Color.Black
 )
